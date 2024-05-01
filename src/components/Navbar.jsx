@@ -1,9 +1,13 @@
-import { useContext } from "react";
-import { NavLink } from "react-router-dom";
-import { UserContext, useUserContext } from "../context/UserContext";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useUserContext } from "../context/UserContext";
 
 const Navbar = () => {
     const {user, setUser} = useUserContext();
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        setUser(false);
+    }
     return (
         <nav>
             <NavLink className="mx-2" to="/">Home</NavLink>
@@ -12,7 +16,7 @@ const Navbar = () => {
                     <>
                         <span className="mx-2">|</span>
                         <NavLink className="mx-2" to="/dashboard">Dashboard</NavLink>
-                        <button className="mx-2" onClick={() => setUser(false)}>Logout</button>
+                        <button className="mx-2" onClick={handleClick}>Logout</button>
                     </>
                 )
             }
