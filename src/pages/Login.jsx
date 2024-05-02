@@ -1,39 +1,54 @@
-import { useState } from "react";
+import { Formik } from "formik";
 import { login } from "../config/firebase";
-import { useRedirectActiveUser } from "../hooks/useRedirectActiveUser";
 import { useUserContext } from "../context/UserContext";
+import { useRedirectActiveUser } from "../hooks/useRedirectActiveUser";
 
 const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const { user } = useUserContext();
+  useRedirectActiveUser(user, "/dashboard");
 
-    const { user } = useUserContext();
-    useRedirectActiveUser(user, "/dashboard");
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-          const credential = await login({ email, password });
-          console.log(credential);
-        } catch (error) {
-          console.log(error);
-        }
+  const onSubmit = async (values) => {
+    console.log(values);
+    try {
+        const credential = await login({email: values.email, password: values.password});
+        console.log(credential);
+    } catch (error) {
+        console.log(error);
     }
+}
 
   return (
     <div>
       <h1>Login</h1>
-        <form onSubmit={handleSubmit}>
-            <label>
-            Username:
-            <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" name="username" placeholder="Ingresa tu email"/>
-            </label>
-            <label>
-            Password:
-            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" name="password" placeholder="Ingresa tu contraseña"/>
-            </label>
-            <button type="submit">Login</button>
-        </form>
+      <Formik 
+        initialValues={{email: "", password:""}}
+        onSubmit={onSubmit}>
+        {
+          ({values, handleChange, handleSubmit}) => (
+            <form onSubmit={handleSubmit}>
+                <label>
+                Username:
+                <input 
+                  onChange={handleChange} 
+                  value={values.email} 
+                  type="email" 
+                  name="email" 
+                  placeholder="Ingresa tu email"/>
+                </label>
+                <label>
+                Password:
+                <input 
+                  value={values.password} 
+                  onChange={handleChange} 
+                  type="password" 
+                  name="password" 
+                  placeholder="Ingresa tu contraseña"/>
+                </label>
+                <button type="submit">Login</button>
+            </form>
+          )
+        }
+      </Formik>
     </div>
   );
 }
