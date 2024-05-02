@@ -1,12 +1,23 @@
 import { useState } from "react";
+import { login } from "../config/firebase";
+import { useRedirectActiveUser } from "../hooks/useRedirectActiveUser";
+import { useUserContext } from "../context/UserContext";
 
 const Login = () => {
-    const [user, setUser] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSubmit = (e) => {
+    const { user } = useUserContext();
+    useRedirectActiveUser(user, "/dashboard");
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(user, password);
+        try {
+          const credential = await login({ email, password });
+          console.log(credential);
+        } catch (error) {
+          console.log(error);
+        }
     }
 
   return (
@@ -15,7 +26,7 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
             <label>
             Username:
-            <input onChange={(e) => setUser(e.target.value)} value={user} type="email" name="username" placeholder="Ingresa tu email"/>
+            <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" name="username" placeholder="Ingresa tu email"/>
             </label>
             <label>
             Password:

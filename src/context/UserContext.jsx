@@ -1,11 +1,35 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useState } from "react";
 import { createContext } from "react";
+
+//Firebase
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../config/firebase";
 
 export const UserContext = createContext();
 
 const UserProvider = ({children}) => {
     const [user, setUser] = useState(false);
+
+    useEffect(() => {
+        console.log(user);
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser(user);
+            } else {
+                setUser(false);
+            }
+    })
+    return unsubscribe;
+    }, [user]);
+
+    if (user === false) {
+        return (
+            <div>
+                Loading...
+            </div>
+        )
+    }
     return (
         <UserContext.Provider value={{ user, setUser }}>
             {children}

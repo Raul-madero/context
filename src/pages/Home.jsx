@@ -1,12 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
+import { useEffect } from "react";
 
 const Home = () => {
     const { user } = useUserContext();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user) {
+            navigate("/dashboard");
+        }
+    }, [user]);
+
     const handleClick = () => {
         navigate("/login");
     }
+
     const handleRegister = () => {
         navigate("/register");
     }  

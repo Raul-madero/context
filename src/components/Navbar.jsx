@@ -1,9 +1,8 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 
 const Navbar = () => {
     const {user, setUser} = useUserContext();
-    const navigate = useNavigate();
 
     const handleClick = () => {
         setUser(false);
