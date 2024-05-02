@@ -1,11 +1,16 @@
 import { NavLink } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
+import { logout } from "../config/firebase";
 
 const Navbar = () => {
-    const {user, setUser} = useUserContext();
+    const {user} = useUserContext();
 
-    const handleClick = () => {
-        setUser(false);
+    const handleClick = async () => {
+        try {
+            await logout();
+        } catch (error) {
+            console.log(error);
+        }  
     }
     return (
         <nav>
